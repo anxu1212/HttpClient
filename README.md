@@ -3,35 +3,71 @@
 #### 介绍
 轻量级 http client
 
-#### 软件架构
-软件架构说明
-
+#### 目录结构
+```
+├─src                   代码目录
+│  ├─Client.php           Http Client     
+│  ├─ClientRequest.php    Request类
+│  └─ClientResponse.php   Response类
+│ 
+├─tests                   测试代码   
+├─composer.json           composer.json
+├─phpunit.xml.dist        测试配置
+└─README.md               README.md 
+```
 
 #### 安装教程
-
-1. xxxx
-2. xxxx
-3. xxxx
+```
+composer require --prefer-dist anxu/http-client "*"
+```
 
 #### 使用说明
+```php
+$client = new Client([
+            'Content-type' => 'application/json' //The global header
+        ]);
 
-1. xxxx
-2. xxxx
-3. xxxx
+        $response = $client->get('http://xxxxx.com', [
+            'key' => 'value' ////The url parameters
+        ],[
+            'key'=>'value' //Set request http headers
+        ]);
 
-#### 参与贡献
+//        $response = $client->post('http://xxxxx.com', [
+//            'key' => 'value'   //The url parameters
+//        ],json_encode([  ////Set http body
+//            'id'=>1,
+//            'name'=>'test'
+//        ]), [
+//            'key'=>'value' //Set request http headers
+//        ]);
 
-1. Fork 本仓库
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
+        //Response status
+        var_dump($response->getStatus());
+        //200
 
+        //Response Headers
+        var_dump($response->getHeaders());
+//        array(2) {
+//            ["Set-Cookie"]=> array(2) {
+//                [0]=> string(8) "SESSIONID=d98aa7fe2dd4a8b0111374f84ca3941e",
+//                [1]=> string(8) "id=941e"
+//            }
+//            ["Content-Type"]=> array(1) {
+//                [0]=> string(9) "text/html"
+//            }
+//        }
 
-#### 码云特技
+        //The specified response header
+        var_dump($response->getHeader('Set-Cookie'));
+        //string(8) "SESSIONID=d98aa7fe2dd4a8b0111374f84ca3941e"
 
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+        var_dump($response->getHeader('Set-Cookie', false));
+//       array(2) {
+//           [0]=> string(8) "SESSIONID=d98aa7fe2dd4a8b0111374f84ca3941e",
+//           [1]=> string(8) "id=941e"
+//       }
+
+        //Response body
+        echo $response->getContent();
+```
